@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Currency</title>
+    <script>
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelector('#form').onsubmit = () => {
+            // Initialize new request
+            const request = new XMLHttpRequest();
+            const currency = document.querySelector('#currency').value;
+            request.open('POST','/convert');
+            // Request function for when requests complete
+            request.onload = ()=> {
+                // Extract JSON data
+                const data = JSON.parse(request.responseText);
+                // Update the result:
+                if (data.success) {
+                    const contents = `1 USD is equal to ${data.rate} ${currency}`;
+                    document.querySelector('#result').innerHTML = contents;
+                } else {
+                    document.querySelector('#result').innerHTML = 'There is an error';
+                };
+            
+            }
+            //  Create the data to be included in the POST request
+            const data = new FormData();
+            data.append('currency', currency);
+            //  Send request:
+            request.send(data);
+            return false;
+
+        };
+    });   
+    
+    
+    </script>
+</head>
+<body>
+    <form id="form">
+        <input id="currency" autocomplete="off" autofocus placeholder="Currency" type="text">
+        <input type="submit" value = "Get Exchange Rate">
+    </form>
+    <br>
+    <div id="result"></div>
+    
+</body>
+</html>
+
+<!-- Ajax, get more info from the server without needing to reload the page -->
